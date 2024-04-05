@@ -4,6 +4,7 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.*;
@@ -121,6 +122,93 @@ public class ElementsTests {
         }
     }
 
+    @Test
+    @Story("Перейти на страницу Drag and Drop. Перетащить элемент A на элемент B. Задача на 10 баллов – сделать это, не прибегая к методу DragAndDrop(); Проверить, что элементы поменялись местами")
+    void dragAndDropTest() {
+        DragAndDropPage dragAndDropPage = startPage.goToDragAndDropPage();
+        String textOfFirstElement = dragAndDropPage.getTextOfFirstElement();
+        String textOfSecondElement = dragAndDropPage.getTextOfSecondElement();
+        log.info("Текст первого элемента - " + textOfFirstElement);
+        log.info("Текст второго элемента - " + textOfSecondElement);
+        dragAndDropPage
+                .swapElements();
+        String textOfFirstElementAfterSwap = dragAndDropPage.getTextOfFirstElement();
+        String textOfSecondElementAfterSwap = dragAndDropPage.getTextOfSecondElement();
+        log.info("Текст первого элемента после свапа - " + dragAndDropPage.getTextOfFirstElement());
+        log.info("Текст второго элемента после свапа - " + dragAndDropPage.getTextOfSecondElement());
+        assertThat(textOfFirstElement)
+                .isNotBlank()
+                .isNotEqualTo(textOfFirstElementAfterSwap)
+                .isEqualTo(textOfSecondElementAfterSwap);
+        assertThat(textOfSecondElement)
+                .isNotBlank()
+                .isNotEqualTo(textOfSecondElementAfterSwap)
+                .isEqualTo(textOfFirstElementAfterSwap);
+    }
+
+    @Test
+    @Story("Перейти на страницу Context menu. Нажать правой кнопкой мыши на отмеченной области и проверить, что JS Alert имеет ожидаемый текст.")
+    void ContextMenuTest() {
+        ContextMenuPage contextMenuPage = startPage.goToContextMenuPage()
+                .hotspotContextClick();
+        String textInAlert = contextMenuPage.getTextInAlert();
+        assertThat(textInAlert).isEqualTo("You selected a context menu");
+    }
+
+    @Test
+    @Story("Перейти на страницу Infinite Scroll. Проскролить страницу до текста «Eius», проверить, что текст в поле зрения.")
+    void infiniteScrollTest() {
+        startPage.goToInfiniteScrollPage()
+                .scrollToElement("Eius");
+    }
+
+    @Test
+    @Story("Перейти на страницу Key Presses. Нажать по 10 латинских символов, клавиши Enter, Ctrl, Alt, Tab. Проверить, что после нажатия отображается всплывающий текст снизу, соответствующий конкретной клавише.")
+    void goToKeyPressesTest() {
+        KeyPressesPage keyPressesPage = startPage.goToKeyPressesPage()
+                .clickOnInput("A");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("A");
+        keyPressesPage.clickOnInput("B");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("B");
+        keyPressesPage.clickOnInput("C");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("C");
+        keyPressesPage.clickOnInput("D");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("D");
+        keyPressesPage.clickOnInput("E");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("E");
+        keyPressesPage.clickOnInput("F");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("F");
+        keyPressesPage.clickOnInput("G");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("G");
+        keyPressesPage.clickOnInput("H");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("H");
+        keyPressesPage.clickOnInput("I");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("I");
+        keyPressesPage.clickOnInput("J");
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("J");
+        keyPressesPage.clickOnInput(Keys.CONTROL);
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("CONTROL");
+        keyPressesPage.clickOnInput(Keys.ALT);
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("ALT");
+        keyPressesPage.clickOnInput(Keys.TAB);
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("TAB");
+        keyPressesPage.clickOnInput(Keys.ENTER);
+        assertThat(keyPressesPage.getKeyName())
+                .isEqualTo("ENTER");
+    }
 
     @AfterEach
     void tearDown() {
